@@ -31,4 +31,10 @@ public class RelogioService
 		return relogioRepository.save(relogio);
 	}
 	
+	public void remover(Long id)
+	{
+		relogioRepository.deleteById(id);
+	}
+	
+	
 }

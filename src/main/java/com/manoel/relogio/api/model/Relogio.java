@@ -35,7 +35,7 @@ public class Relogio
 	@Column(name = "data_cadastro", nullable = false)
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataCadastro;
-	
+
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	
