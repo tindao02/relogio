@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,6 +31,7 @@ public class Relogio
 	
 	@Column(length = 50)
 	@NotEmpty
+	@NotBlank
 	private String marca;
 	
 	@Column(name = "data_cadastro", nullable = false)
