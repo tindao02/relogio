@@ -1,8 +1,8 @@
 package com.manoel.relogio.api.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.manoel.relogio.api.model.Relogio;
@@ -21,12 +21,7 @@ public class RelogioService
 		return relogioRepository.findAll();
 	}
 	
-	public Optional<Relogio> buscar(Long id)
-	{
-		return relogioRepository.findById(id);
-	}
-	
-	public Relogio criar(Relogio relogio)
+	public Relogio salvar(Relogio relogio)
 	{
 		return relogioRepository.save(relogio);
 	}
@@ -36,5 +31,17 @@ public class RelogioService
 		relogioRepository.deleteById(id);
 	}
 	
+	public Relogio buscarPorId(Long id)
+	{
+		return relogioRepository.findById(id)
+								.orElseThrow( () -> new EmptyResultDataAccessException(1) );
+	}
+	
+	public void atualizarStatus(Long id, String status)
+	{		
+		Relogio relogioSalvo = buscarPorId(id);
+		relogioSalvo.alterarStatus(status);
+		relogioRepository.save(relogioSalvo);
+	}
 	
 }

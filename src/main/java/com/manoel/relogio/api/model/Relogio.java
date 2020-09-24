@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -39,12 +40,20 @@ public class Relogio
 	private LocalDate dataCadastro;
 
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private Status status;
 	
+	//Executa antes, assim podendo automaticamente setar a data de cadastro 
 	@PrePersist
 	public void prePersist()
 	{
-		setDataCadastro(LocalDate.now());
+		this.setDataCadastro(LocalDate.now());
+	}
+	
+	//Para fazer alterações no Status
+	public void alterarStatus(String status)
+	{
+		this.setStatus(Status.valueOf(status));
 	}
 	
 }

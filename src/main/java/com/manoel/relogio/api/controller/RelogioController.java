@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.manoel.relogio.api.model.Relogio;
-import com.manoel.relogio.api.repository.RelogioRepository;
 import com.manoel.relogio.api.service.RelogioService;
 
 import lombok.AllArgsConstructor;
@@ -27,7 +27,6 @@ import lombok.AllArgsConstructor;
 public class RelogioController 
 {
 	private final RelogioService relogioService;
-	private final RelogioRepository f;
 	
 	@GetMapping
 	public List<Relogio> listar()
@@ -36,17 +35,15 @@ public class RelogioController
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Relogio> buscar(@PathVariable Long id)
+	public ResponseEntity<Relogio> buscarPorId(@PathVariable Long id)
 	{
-		return relogioService.buscar(id)
-							 .map(relogio -> ResponseEntity.ok(relogio))
-							 .orElse(ResponseEntity.notFound().build());
+		return ResponseEntity.ok(relogioService.buscarPorId(id));
 	}
 	
 	@PostMapping
 	public ResponseEntity<Relogio> criar(@Valid @RequestBody Relogio relogio)
 	{
-		return ResponseEntity.status(HttpStatus.CREATED).body(relogioService.criar(relogio));
+		return ResponseEntity.status(HttpStatus.CREATED).body(relogioService.salvar(relogio));
 	}
 	
 	@DeleteMapping("/{id}")
@@ -56,5 +53,22 @@ public class RelogioController
 		relogioService.remover(id);
 	}
 	
+	@PutMapping("/{id}")
+	public ResponseEntity<Relogio> atualizar(@PathVariable Long id, @Valid @RequestBody Relogio relogio)
+	{
+		Relogio relogioSalvo = relogioService.buscarPorId(id);
+		
+		relogioSalvo.setMarca(relogio.getMarca());		
+		relogioSalvo.alterarStatus(relogio.getStatus().name());
+
+		return ResponseEntity.ok(relogioService.salvar(relogioSalvo));
+	}
+	
+	@PutMapping("/{id}/status")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarStatus(@PathVariable Long id, @RequestBody String status)
+	{
+		relogioService.atualizarStatus(id, status);
+	}
 	
 }
